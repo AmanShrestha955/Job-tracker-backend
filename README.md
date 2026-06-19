@@ -1,6 +1,6 @@
 # Job Tracker API
 
-A REST API backend for tracking job applications — built with Node.js, Express, and MySQL.
+A REST API backend for tracking job applications built with Node.js, Express, and MySQL.
 
 ---
 
@@ -296,14 +296,4 @@ All errors are returned in a consistent JSON format using a custom `AppError` cl
 
 See `.env.example` for a template.
 
----
 
-## Live Demo
-
-Coming soon.
-
----
-
-## License
-
-MIT
