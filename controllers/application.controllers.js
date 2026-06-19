@@ -8,8 +8,8 @@ const {
 
 const getAllApplicationsController = async (req, res) => {
   try {
-    const { company_name, job_title, status, limit, offset } = req.query;
-    const filterData = { company_name, job_title, status };
+    const { search, status, limit, offset } = req.query;
+    const filterData = { search, status };
     const applications = await getAllApplicationsService(
       filterData,
       limit,
@@ -19,8 +19,8 @@ const getAllApplicationsController = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({
-      message: "error in getAllApplicationsController",
-      error: error.message,
+      message: error.message,
+      error: "error in getAllApplicationsController",
     });
   }
 };
@@ -30,15 +30,14 @@ const getApplicationByIdController = async (req, res) => {
   const { id } = req.params;
   try {
     const application = await getApplicationByIdService(id);
-    if (application.length === 0) {
-      return res.status(404).json({ message: "Application not found" });
-    }
+    console.log(application.length);
     res.status(200).json(application);
   } catch (error) {
     console.error(error);
-    res.status(500).json({
-      message: "error in getApplicationByIdController",
-      error: error.message,
+    const errorStatus = error.statusCode || 500;
+    res.status(errorStatus).json({
+      message: error.message,
+      error: "error in getApplicationByIdController",
     });
   }
 };
@@ -50,9 +49,10 @@ const createApplicationController = async (req, res) => {
     res.status(201).json(result);
   } catch (error) {
     console.error(error);
-    res.status(500).json({
-      message: "error in createApplicationController",
-      error: error.message,
+    const errorStatus = error.statusCode || 500;
+    res.status(errorStatus).json({
+      message: error.message,
+      error: "error in createApplicationController",
     });
   }
 };
@@ -66,9 +66,10 @@ const updateApplicationController = async (req, res) => {
     res.status(200).json(result);
   } catch (error) {
     console.error(error);
-    res.status(500).json({
-      message: "error in updateApplicationController",
-      error: error.message,
+    const errorStatus = error.statusCode || 500;
+    res.status(errorStatus).json({
+      message: error.message,
+      error: "error in updateApplicationController",
     });
   }
 };
@@ -80,9 +81,10 @@ const deleteApplicationController = async (req, res) => {
     res.status(200).json(result);
   } catch (error) {
     console.error(error);
-    res.status(500).json({
-      message: "error in deleteApplicationController",
-      error: error.message,
+    const errorStatus = error.statusCode || 500;
+    res.status(errorStatus).json({
+      message: error.message,
+      error: "error in deleteApplicationController",
     });
   }
 };

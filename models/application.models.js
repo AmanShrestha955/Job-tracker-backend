@@ -1,10 +1,12 @@
 const pool = require("../config/db.js");
 
 const getAllApplications = async (conditions, values, limits, offset) => {
-  let query = "SELECT * FROM applications";
+  let query =
+    "SELECT id, company_name, job_title, applied_date FROM applications";
   let countQuery = "SELECT COUNT(*) as TOTAL FROM applications";
   if (conditions.length > 0) {
     query += " WHERE " + conditions.join(" AND ");
+    countQuery += " WHERE " + conditions.join(" AND ");
   }
   if (limits !== undefined) {
     query += " LIMIT ?";
@@ -14,8 +16,10 @@ const getAllApplications = async (conditions, values, limits, offset) => {
       values.push(offset);
     }
   }
+  console.log(query);
+  console.log(values);
   const [applications] = await pool.execute(query, values);
-  const [countResult] = await pool.execute(countQuery);
+  const [countResult] = await pool.execute(countQuery, values);
 
   console.log(applications);
   console.log(countResult[0].TOTAL);
@@ -26,7 +30,7 @@ const getApplicationById = async (value) => {
   let query = "SELECT * FROM applications WHERE id = ?";
   const [application] = await pool.execute(query, value);
   console.log(application);
-  return application;
+  return application[0];
 };
 
 const createApplication = async (value) => {
@@ -63,10 +67,6 @@ const updateApplication = async (id, applicationData) => {
 
   console.log(result);
 
-  if (result.affectedRows === 0) {
-    throw new Error("Application not found");
-  }
-
   return result;
 };
 
@@ -75,10 +75,7 @@ const deleteApplication = async (value) => {
   const [result] = await pool.execute(query, value);
   console.log(result);
 
-  if (result.affectedRows === 0) {
-    throw new Error("Application not found");
-  }
-  return { message: "Application updated successfully" };
+  return result;
 };
 
 module.exports = {
